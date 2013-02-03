@@ -6,7 +6,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"flag"
-	"github.com/mattbaird/elastigo/api"
+	"github.com/mschoch/elastigo/api"
 	"hash/crc32"
 	"log"
 	"net/http"

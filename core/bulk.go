@@ -3,7 +3,7 @@ package core
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/mattbaird/elastigo/api"
+	"github.com/mschoch/elastigo/api"
 	"io"
 	"log"
 	"strconv"
