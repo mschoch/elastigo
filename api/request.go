@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"runtime"
 	"strings"
@@ -36,6 +37,7 @@ const (
 )
 
 var (
+	_               = log.Ldate
 	Protocol string = DefaultProtocol
 	Domain   string = DefaultDomain
 	Port     string = DefaultPort
@@ -81,20 +83,20 @@ func (r *Request) SetBody(body io.Reader) {
 	}
 }
 
-func (r *Request) Do(v interface{}) (string, error) {
+func (r *Request) Do(v interface{}) (int, []byte, error) {
 	res, err := http.DefaultClient.Do((*http.Request)(r))
 	if err != nil {
-		return "", err
+		return 0, nil, err
 	}
 
 	defer res.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(res.Body)
 
-	if v != nil {
+	if res.StatusCode > 304 && v != nil {
 		jsonErr := json.Unmarshal(bodyBytes, v)
 		if jsonErr != nil {
-			return "", err
+			return res.StatusCode, nil, err
 		}
 	}
-	return string(bodyBytes), err
+	return res.StatusCode, bodyBytes, nil
 }
